@@ -23,7 +23,7 @@ module.exports.routes = {
   'POST /auth/register': 'AuthController.register',
   'POST /auth/login': 'AuthController.login',
   'POST /chat/send': 'ChatController.sendMessage',
-
+  'POST /chat/join': 'ChatRoomController.join',
 
 
   /***************************************************************************

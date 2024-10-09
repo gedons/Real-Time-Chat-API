@@ -22,7 +22,7 @@ module.exports = {
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
-    const token = jwt.sign({ id: user.id }, 'wyefuyvevwuevfuwvewueyvfwelos', { expiresIn: '1h' });
+    const token = jwt.sign({ id: user.id }, 'wyefuyvevwuevfuw767534vewueyvfwelos', { expiresIn: '1h' });
     return res.json({ token });
   },
 };
