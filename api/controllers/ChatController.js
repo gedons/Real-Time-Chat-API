@@ -4,27 +4,52 @@
  * @description :: Server-side actions for handling incoming requests.
  * @help        :: See https://sailsjs.com/docs/concepts/actions
  */
+// eslint-disable-next-line linebreak-style
 
 module.exports = {
-  sendMessage: async function (req, res) {
-    const { chatRoomId, sender, content } = req.body;
 
-    // Find the chat room by ID
-    let chatRoom = await ChatRoom.findOne({ id: chatRoomId });
-
-    // If the chat room does not exist, create it (you need sender and receiver details)
-    if (!chatRoom) {
-      const { user1, user2 } = req.body; // Assuming user1 and user2 are sent in the request
-      chatRoom = await ChatRoom.create({ user1, user2 }).fetch();
+  joinRoom: async function (req, res) {
+    if (!req.isSocket) {
+      return res.badRequest({ error: 'Only WebSocket connections are allowed' });
     }
 
-    // Create the message in the identified or newly created chat room
-    const message = await Message.create({ chatRoomId: chatRoom.id, sender, content }).fetch();
-
-    // Broadcast the message to both users in the chat room
-    sails.sockets.broadcast(chatRoom.id, 'messageReceived', message);
-    return res.json(message);
+    const roomId = req.param('roomId');
+    req.socket.join(roomId); // Join the WebSocket room
+    return res.json({ message: 'Joined room ' + roomId });
   },
+
+  sendMessage: async function (req, res) {
+    if (!req.isSocket) {
+      return res.badRequest({ error: 'Only WebSocket connections are allowed' });
+    }
+
+    const { message, roomId } = req.body;
+    const user = req.socket.handshake.user;
+
+    // Broadcast the message to everyone in the room
+    sails.sockets.broadcast(roomId, 'newMessage', {
+      message,
+      user: user.userId,
+      timestamp: new Date()
+    });
+
+    // Optionally, save the message to MongoDB (Chat model)
+    await Chat.create({
+      message,
+      user: user.userId,
+      roomId
+    });
+
+    return res.ok();
+  },
+
+  getMessages: async function (req, res) {
+    const roomId = req.param('roomId');
+    const messages = await Chat.find({ roomId }).sort('createdAt DESC').limit(50);
+    return res.json(messages);
+  }
+
+
 };
 
 

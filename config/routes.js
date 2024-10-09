@@ -1,3 +1,4 @@
+// eslint-disable-next-line linebreak-style
 /**
  * Route Mappings
  * (sails.config.routes)
@@ -20,10 +21,24 @@ module.exports.routes = {
   ***************************************************************************/
 
   '/': { view: 'pages/homepage' },
-  'POST /auth/register': 'AuthController.register',
-  'POST /auth/login': 'AuthController.login',
-  'POST /chat/send': 'ChatController.sendMessage',
-  'POST /chat/join': 'ChatRoomController.join',
+  'POST /api/auth/register': 'AuthController.register',
+  'POST /api/auth/login': 'AuthController.login',
+
+  'POST /api/chat/:roomId/join': {
+    controller: 'ChatController',
+    action: 'joinRoom',
+    policy: 'isAuthenticated'
+  },
+  'POST /api/chat/:roomId/messages': {
+    controller: 'ChatController',
+    action: 'sendMessage',
+    policy: 'isAuthenticated'
+  },
+  'GET /api/chat/:roomId/messages': {
+    controller: 'ChatController',
+    action: 'getMessages',
+    policy: 'isAuthenticated'
+  }
 
 
   /***************************************************************************

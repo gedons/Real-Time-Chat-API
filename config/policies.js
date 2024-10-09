@@ -17,6 +17,15 @@ module.exports.policies = {
   *                                                                          *
   ***************************************************************************/
 
+  // eslint-disable-next-line linebreak-style
   // '*': true,
 
+
+  AuthController: {
+    '*': true, // Allow all actions in AuthController
+  },
+  ChatController: {
+    '*': 'isAuthenticated', // Protect all actions in ChatController
+  },
+  // Add additional controllers and their policies as needed
 };
