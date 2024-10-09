@@ -7,16 +7,12 @@
 
 module.exports = {
   sendMessage: async (req, res) => {
-    const { message, userId } = req.body;
+    const { sender, receiver, content } = req.body;
+    const message = await Message.create({ sender, receiver, content }).fetch();
 
-    // Broadcast message to all connected clients
-    sails.sockets.broadcast('chat', {
-      userId,
-      message,
-      createdAt: new Date(),
-    });
-
-    return res.status(200).json({ message: 'Message sent' });
+    // Broadcast message to the recipient
+    sails.sockets.broadcast(receiver, 'messageReceived', message);
+    return res.json(message);
   },
 };
 

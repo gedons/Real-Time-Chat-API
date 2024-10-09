@@ -22,7 +22,6 @@ module.exports.routes = {
   '/': { view: 'pages/homepage' },
   'POST /auth/register': 'AuthController.register',
   'POST /auth/login': 'AuthController.login',
-  'POST /auth/logout': 'AuthController.logout',
   'POST /chat/send': 'ChatController.sendMessage',
 
 

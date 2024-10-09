@@ -40,14 +40,6 @@ module.exports.http = {
     //   'favicon',
     // ],
 
-    passportInit: passport.initialize(),
-    passportSession: passport.session(),
-    order: [
-      'passportInit',
-      'passportSession',
-      // other middlewares...
-    ],
-
 
     /***************************************************************************
     *                                                                          *
