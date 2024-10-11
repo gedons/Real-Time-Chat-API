@@ -30,18 +30,31 @@ module.exports = {
   login: async function (req, res) {
     try {
       const { email, password } = req.body;
+
+      // Check if the email is provided
+      if (!email || !password) {
+        return res.status(400).json({ error: 'Email and password are required' });
+      }
+
+      // Find the user by email
       const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
 
-      // eslint-disable-next-line curly
-      if (!user) return res.status(404).json({ error: 'User not found' });
-
+      // Compare the provided password with the hashed password
       const isPasswordValid = await bcrypt.compare(password, user.password);
-      if (!isPasswordValid) {return res.status(401).json({ error: 'Invalid credentials' });}
+      if (!isPasswordValid) {
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
 
-      const token = jwt.sign({ userId: user.id }, jwtSecret, { expiresIn: '1h' });
+      // Generate JWT token
+      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
       return res.status(200).json({ token });
-    } catch (err) {
-      return res.status(500).json({ error: 'Login failed' });
+    } catch (error) {
+      // Log the error for debugging purposes
+      console.error('Login error:', error);
+      return res.status(500).json({ error: 'Login failed due to server error' });
     }
   },
 };

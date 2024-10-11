@@ -28,11 +28,14 @@ module.exports.security = {
   *                                                                          *
   ***************************************************************************/
 
-  // cors: {
-  //   allRoutes: false,
-  //   allowOrigins: '*',
-  //   allowCredentials: false,
-  // },
+  cors: {
+    allRoutes: true,
+    allowCredentials: false,
+    allowOrigins: '*', // You can specify your frontend's origin instead of '*'
+    allowOrigin: '*', // Note: This is a simplified example
+    allowRequestHeaders: 'Content-Type, Authorization', // Add any other headers you need
+    allowResponseHeaders: 'Content-Type, Authorization',
+  },
 
 
   /****************************************************************************

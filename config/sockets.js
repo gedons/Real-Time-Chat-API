@@ -1,5 +1,3 @@
-const jwt = require('jsonwebtoken');
-// eslint-disable-next-line linebreak-style
 /**
  * WebSocket Server Settings
  * (sails.config.sockets)
@@ -29,33 +27,8 @@ module.exports.sockets = {
   *                                                                          *
   ***************************************************************************/
 
-  // transports: [ 'websocket' ],
-  transports: ['websocket', 'polling'],
+  transports: [ 'websocket', 'polling' ],
 
-  beforeConnect: function(handshake, proceed) {
-    // Extract JWT token from handshake query or headers
-    const token = handshake._query['token'] || handshake.headers['authorization'];
-
-    if (!token) {
-      return proceed('Authentication error: Token required', false);
-    }
-
-    // eslint-disable-next-line prefer-arrow-callback
-    jwt.verify(token, process.env.JWT_SECRET, function(err, decoded) {
-      if (err) {
-        return proceed('Authentication error: Invalid token', false);
-      }
-
-      // Attach the decoded user data to the handshake for later use
-      handshake.user = decoded;
-      return proceed(undefined, true);
-    });
-  },
-
-  afterDisconnect: function(session, socket, done) {
-    // Handle user disconnection logic if needed
-    return done();
-  }
 
   /***************************************************************************
   *                                                                          *
@@ -69,13 +42,13 @@ module.exports.sockets = {
   *                                                                          *
   ***************************************************************************/
 
-  // beforeConnect: function(handshake, proceed) {
-  //
-  //   // `true` allows the socket to connect.
-  //   // (`false` would reject the connection)
-  //   return proceed(undefined, true);
-  //
-  // },
+  beforeConnect: function(handshake, proceed) {
+
+    // `true` allows the socket to connect.
+    // (`false` would reject the connection)
+    return proceed(undefined, true);
+
+  },
 
 
   /***************************************************************************

@@ -1,3 +1,4 @@
+// eslint-disable-next-line linebreak-style
 /**
  * Datastores
  * (sails.config.datastores)

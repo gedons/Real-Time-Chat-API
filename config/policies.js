@@ -28,4 +28,7 @@ module.exports.policies = {
     '*': 'isAuthenticated', // Protect all actions in ChatController
   },
   // Add additional controllers and their policies as needed
+  UserController: {
+    '*': 'isAuthenticated',
+  }
 };

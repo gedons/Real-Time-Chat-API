@@ -38,7 +38,13 @@ module.exports.routes = {
     controller: 'ChatController',
     action: 'getMessages',
     policy: 'isAuthenticated'
-  }
+  },
+  'GET /api/users': {
+    controller: 'UserController',
+    action: 'listUsers',
+    policy: 'isAuthenticated'
+  },
+
 
 
   /***************************************************************************

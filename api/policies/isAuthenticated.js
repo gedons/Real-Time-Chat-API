@@ -1,5 +1,5 @@
+/* eslint-disable no-unused-vars */
 const jwt = require('jsonwebtoken');
-const jwtSecret = process.env.JWT_SECRET;
 
 module.exports = async function (req, res, proceed) {
   const token = req.headers['authorization'];
@@ -8,12 +8,13 @@ module.exports = async function (req, res, proceed) {
     return res.status(401).json({ error: 'Token is required' });
   }
 
+  // Remove "Bearer " from the token
+  const bearerToken = token.split(' ')[1];
+
   try {
-    const decoded = jwt.verify(token, jwtSecret);
-    req.user = decoded;
-    // eslint-disable-next-line no-trailing-spaces
-    return proceed();
-  // eslint-disable-next-line no-unused-vars
+    const decoded = jwt.verify(bearerToken, process.env.JWT_SECRET);
+    req.user = decoded; // Attach the user data to the request
+    return proceed(); // Allow the request to continue
   } catch (err) {
     return res.status(401).json({ error: 'Invalid token' });
   }
